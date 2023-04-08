@@ -92,6 +92,7 @@ class _homepageState extends State<homepage> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
+      appBar: AppBar(title: const Text("filmix")),
       body: Center(
           child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -106,8 +107,9 @@ class _homepageState extends State<homepage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   mainAxisSize: MainAxisSize.max,
                   children: [
+                    Image.asset("assets/leo.jpg"),
                     SizedBox(width: 15),
-                    Text('ekle'),
+                    Text('DATABASE'),
                   ],
                 ),
               ),
