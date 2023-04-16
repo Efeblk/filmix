@@ -1,8 +1,11 @@
 // ignore_for_file: prefer_const_constructors, library_private_types_in_public_api, camel_case_types
 
 import 'package:flutter/material.dart';
+import 'package:isar/isar.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:syncfusion_flutter_charts/sparkcharts.dart';
+
+import 'collections/film.dart';
 
 class charts extends StatefulWidget {
   // ignore: prefer_const_constructors_in_immutables
@@ -13,13 +16,54 @@ class charts extends StatefulWidget {
 }
 
 class chartsState extends State<charts> {
+  late Isar isar;
+  int id = 0;
+  DateTime date = DateTime.now();
+
   List<_SalesData> data = [
-    _SalesData('Ocak', 35),
+    _SalesData('Ocak', 55),
     _SalesData('Şubat', 28),
     _SalesData('Mart', 34),
     _SalesData('Nisan', 32),
     _SalesData('Mayıs', 40)
   ];
+
+  openCon() async {
+    isar = await Isar.open([FilmSchema]);
+    setState(() {});
+  }
+
+  getLastAddedFilmId() async {
+    final films = await isar.films.where().findAll();
+    if (films.isNotEmpty) {
+      films.sort((a, b) => b.id.compareTo(a.id));
+      _SalesData edata = _SalesData("Bu ay", films.first.id);
+      setState(() {
+        id = films.first.id;
+        data.add(edata);
+      });
+    } else {
+      setState(() {});
+    }
+  }
+
+  closeCon() async {
+    await isar.close();
+  }
+
+  @override
+  void initState() {
+    openCon();
+    getLastAddedFilmId();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    closeCon();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,6 +71,9 @@ class chartsState extends State<charts> {
           title: const Text('chart'),
         ),
         body: Column(children: [
+          ElevatedButton(
+              onPressed: () => getLastAddedFilmId(),
+              child: Text("film sayısını ekle")),
           SfCartesianChart(
               primaryXAxis: CategoryAxis(),
               title: ChartTitle(text: 'toplam izlenmeler'),
@@ -51,7 +98,7 @@ class chartsState extends State<charts> {
                 labelDisplayMode: SparkChartLabelDisplayMode.all,
                 xValueMapper: (int index) => data[index].year,
                 yValueMapper: (int index) => data[index].sales,
-                dataCount: 5,
+                dataCount: id,
               ),
             ),
           )
@@ -63,5 +110,5 @@ class _SalesData {
   _SalesData(this.year, this.sales);
 
   final String year;
-  final double sales;
+  final int sales;
 }

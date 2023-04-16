@@ -147,7 +147,7 @@ class _homepageState extends State<homepage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                    //Image.asset("assets/leo.jpg"),
+                    Image.asset("assets/takvim.png"),
                     SizedBox(width: 15),
                     Text('datepicker'),
                   ],
@@ -164,7 +164,7 @@ class _homepageState extends State<homepage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                    //Image.asset("assets/leo.jpg"),
+                    Image.asset("assets/charts.jpg"),
                     SizedBox(width: 15),
                     Text('charts'),
                   ],
