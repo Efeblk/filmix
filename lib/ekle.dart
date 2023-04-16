@@ -32,30 +32,35 @@ class _LoginPageState extends State<LoginPage> {
     return filmList
         .map((e) => Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+              child: Column(
                 children: [
-                  Text(e.name!),
+                  Image.asset("assets/leo.jpg"),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      ElevatedButton(
-                          onPressed: () {
-                            edit = true;
-                            name = e.name!;
-                            editId = e.id;
-                            nameController =
-                                TextEditingController(text: e.name!);
-                            setState(() {});
-                          },
-                          child: Icon(Icons.edit)),
-                      SizedBox(
-                        width: 5,
+                      Text(e.name!),
+                      Row(
+                        children: [
+                          ElevatedButton(
+                              onPressed: () {
+                                edit = true;
+                                name = e.name!;
+                                editId = e.id;
+                                nameController =
+                                    TextEditingController(text: e.name!);
+                                setState(() {});
+                              },
+                              child: Icon(Icons.edit)),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          ElevatedButton(
+                              onPressed: () {
+                                deleteFilm(e.id);
+                              },
+                              child: Icon(Icons.delete)),
+                        ],
                       ),
-                      ElevatedButton(
-                          onPressed: () {
-                            deleteFilm(e.id);
-                          },
-                          child: Icon(Icons.delete)),
                     ],
                   ),
                 ],
@@ -149,12 +154,18 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               edit
                   ? ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green),
                       onPressed: () => editFilm(editId, name),
-                      child: Text("güncelle"))
-                  : SizedBox(),
+                      child: Text("güncelle"),
+                    )
+                  : SizedBox(
+                      width: 85,
+                    ),
               ElevatedButton(onPressed: () => addFilm(), child: Text("ekle")),
               ElevatedButton(onPressed: () => getFilms(), child: Text("göster"))
             ],

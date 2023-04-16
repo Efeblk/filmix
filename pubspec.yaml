@@ -35,6 +35,10 @@ dependencies:
   isar: ^3.0.5
   isar_flutter_libs: ^3.0.5
   google_fonts: ^4.0.3
+  connectivity_plus: ^3.0.4
+  syncfusion_flutter_datepicker: ^21.1.39
+  syncfusion_flutter_charts: ^21.1.39
+  internet_connection_checker: ^1.0.0+1
 
 dev_dependencies:
   flutter_test:

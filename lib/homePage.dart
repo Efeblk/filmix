@@ -1,7 +1,13 @@
+import 'dart:async';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:isar/isar.dart';
 import 'package:vize/collections/film.dart';
+
+import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 class homepage extends StatefulWidget {
   const homepage({super.key});
@@ -13,6 +19,10 @@ class homepage extends StatefulWidget {
 class _homepageState extends State<homepage> {
   late Isar isar;
 
+  late StreamSubscription subscription;
+  bool isDeviceConnected = false;
+  bool isAlertSet = false;
+
   //List<Widget> filmList = [];
   List<Film> filmList = [];
   openCon() async {
@@ -23,6 +33,17 @@ class _homepageState extends State<homepage> {
   closeCon() async {
     await isar.close();
   }
+
+  getConnectivity() =>
+      subscription = Connectivity().onConnectivityChanged.listen(
+        (ConnectivityResult result) async {
+          isDeviceConnected = await InternetConnectionChecker().hasConnection;
+          if (!isDeviceConnected && isAlertSet == false) {
+            showDialogBox();
+            setState(() => isAlertSet = true);
+          }
+        },
+      );
 
   filmtoWidget() {
     return filmList
@@ -48,17 +69,19 @@ class _homepageState extends State<homepage> {
     setState(() {});
   }
 
-  /*@override
+  @override
   void initState() {
-    openCon();
+    getConnectivity();
+    //openCon();
     super.initState();
   }
 
   @override
   void dispose() {
-    closeCon();
+    subscription.cancel();
+    //closeCon();
     super.dispose();
-  }*/
+  }
 
   editFilm(int id, String sname) async {
     final film = Film()
@@ -115,8 +138,65 @@ class _homepageState extends State<homepage> {
               ),
             ),
           ),
+          Expanded(
+            child: InkWell(
+              onTap: () => GoRouter.of(context).push('/datepicker'),
+              child: Padding(
+                padding: const EdgeInsets.all(14.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    //Image.asset("assets/leo.jpg"),
+                    SizedBox(width: 15),
+                    Text('datepicker'),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child: InkWell(
+              onTap: () => GoRouter.of(context).push('/charts'),
+              child: Padding(
+                padding: const EdgeInsets.all(14.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    //Image.asset("assets/leo.jpg"),
+                    SizedBox(width: 15),
+                    Text('charts'),
+                  ],
+                ),
+              ),
+            ),
+          ),
         ],
       )),
     ));
   }
+
+  showDialogBox() => showCupertinoDialog<String>(
+        context: context,
+        builder: (BuildContext context) => CupertinoAlertDialog(
+          title: const Text('No Connection'),
+          content: const Text('Please check your internet connectivity'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () async {
+                Navigator.pop(context, 'Cancel');
+                setState(() => isAlertSet = false);
+                isDeviceConnected =
+                    await InternetConnectionChecker().hasConnection;
+                if (!isDeviceConnected && isAlertSet == false) {
+                  showDialogBox();
+                  setState(() => isAlertSet = true);
+                }
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
 }

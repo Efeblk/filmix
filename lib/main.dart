@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:vize/charts.dart';
+import 'package:vize/datepicker.dart';
 import 'package:vize/ekle.dart';
 import 'package:vize/homePage.dart';
 
@@ -18,6 +20,14 @@ final _router = GoRouter(
       path: '/ekle',
       builder: (context, state) => LoginPage(),
     ),
+    GoRoute(
+      path: '/datepicker',
+      builder: (context, state) => datepicker(),
+    ),
+    GoRoute(
+      path: '/charts',
+      builder: (context, state) => charts(),
+    )
   ],
 );
 
